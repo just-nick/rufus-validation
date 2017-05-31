@@ -8,7 +8,7 @@ Make sure you have ``expecimentalDecorators`` and ``emitDecoratorMetadata`` enab
 
 Install the library from npm...
 ```
-npm install npm-module-tbc --save
+npm install rufus-validation --save
 ```
 
 Add a validation decorator to any property you want to be validated.
