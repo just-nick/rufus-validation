@@ -1,11 +1,11 @@
 import { ValidationOptions } from "./validation-options";
 import { CustomValidation } from "./custom-validation";
 
-const defaultValidationOptions: ValidationOptions = { required: false };
-
 export function Validate(options?: ValidationOptions) {
     return (target: any, propertyKey: string) => {
-        let currentOptions = Reflect.getMetadata('rufus-validation:options', target, propertyKey) || defaultValidationOptions;
+        let currentOptions = Reflect.getMetadata('rufus-validation:options', target, propertyKey) || {
+            required: false
+        };
 
         if (options) {
             for (const key of Object.keys(options)) {

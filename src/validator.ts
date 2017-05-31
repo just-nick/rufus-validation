@@ -11,7 +11,7 @@ export class Validator {
                 resolve(this.validate(object, AsType));
             }
             catch (e) {
-                reject(e.errors);
+                reject(e);
             }
         })
     }
@@ -30,7 +30,7 @@ export class Validator {
             const type = Reflect.getMetadata('design:type', typeToValidate, prop);
             const options = Reflect.getMetadata('rufus-validation:options', typeToValidate, prop);
 
-            if (options.required) {
+            if (options.required === true) {
                 const error = this.validateRequired(value, prop);
                 if (error) {
                     errors.push(error);
