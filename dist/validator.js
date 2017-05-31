@@ -22,7 +22,6 @@ class Validator {
         const typeToValidate = typeInstance || object;
         const properties = Reflect.getMetadata('rufus-validation:properties', typeToValidate);
         for (const prop of properties) {
-            console.log('Prop', prop);
             const value = object[prop];
             const type = Reflect.getMetadata('design:type', typeToValidate, prop);
             const options = Reflect.getMetadata('rufus-validation:options', typeToValidate, prop);
