@@ -1,10 +1,22 @@
 import 'reflect-metadata';
+import { ValidationException } from "./validation.exception";
 import { ValidationError } from "./validation-error";
 import { ValidatableType } from "./validatable-type";
 import { CustomValidation } from "./custom-validation";
 
 export class Validator {
-    public static validate<Type>(object: Type, AsType?: ValidatableType<Type>) {
+    public static validateAsync<Type>(object: Type, AsType?: ValidatableType<Type>): Promise<Type> {
+        return new Promise((resolve, reject) => {
+            try {
+                resolve(this.validate(object, AsType));
+            }
+            catch (e) {
+                reject(e.errors);
+            }
+        })
+    }
+
+    public static validate<Type>(object: Type, AsType?: ValidatableType<Type>): Type {
         let typeInstance: Type;
         if (AsType) {
             typeInstance = new AsType();
@@ -45,7 +57,11 @@ export class Validator {
             }
         }
 
-        return errors;
+        if (errors.length > 0) {
+            throw new ValidationException(errors);
+        }
+
+        return object;
     }
 
     private static validateRequired(value: any, prop: string): ValidationError | undefined {

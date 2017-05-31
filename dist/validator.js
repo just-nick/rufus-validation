@@ -1,7 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
+const validation_exception_1 = require("./validation.exception");
 class Validator {
+    static validateAsync(object, AsType) {
+        return new Promise((resolve, reject) => {
+            try {
+                resolve(this.validate(object, AsType));
+            }
+            catch (e) {
+                reject(e.errors);
+            }
+        });
+    }
     static validate(object, AsType) {
         let typeInstance;
         if (AsType) {
@@ -38,7 +49,10 @@ class Validator {
                 }
             }
         }
-        return errors;
+        if (errors.length > 0) {
+            throw new validation_exception_1.ValidationException(errors);
+        }
+        return object;
     }
     static validateRequired(value, prop) {
         if (value === null || value === undefined) {
