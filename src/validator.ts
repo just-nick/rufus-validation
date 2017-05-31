@@ -14,6 +14,7 @@ export class Validator {
         const properties: string[] = Reflect.getMetadata('rufus-validation:properties', typeToValidate);
 
         for (const prop of properties) {
+            console.log('Prop', prop);
             const value: any = (object as any)[prop];
             const type = Reflect.getMetadata('design:type', typeToValidate, prop);
             const options = Reflect.getMetadata('rufus-validation:options', typeToValidate, prop);
@@ -31,8 +32,8 @@ export class Validator {
                 errors.push(error);
             }
 
-            if (options.custom) {
-                const message = options.custom(value);
+            if (options.customValidator) {
+                const message = options.customValidator(value);
                 if (message) {
                     errors.push({
                         field: prop,
