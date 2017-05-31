@@ -2,12 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 class Validator {
-    static validate(object) {
+    static validate(object, AsType) {
+        let typeInstance;
+        if (AsType) {
+            typeInstance = new AsType();
+        }
         const errors = [];
-        for (const prop of Object.keys(object)) {
+        const typeToValidate = typeInstance || object;
+        const properties = Reflect.getMetadata('rufus-validation:properties', typeToValidate);
+        for (const prop of properties) {
             const value = object[prop];
-            const type = Reflect.getMetadata('design:type', object, prop);
-            const options = Reflect.getMetadata('best-validator-ever:options', object, prop);
+            const type = Reflect.getMetadata('design:type', typeToValidate, prop);
+            const options = Reflect.getMetadata('rufus-validation:options', typeToValidate, prop);
             if (options.required) {
                 const error = this.validateRequired(value, prop);
                 if (error) {
@@ -18,6 +24,17 @@ class Validator {
             const error = this.validateType(value, prop, type.name);
             if (error) {
                 errors.push(error);
+            }
+            if (options.custom) {
+                const message = options.custom(value);
+                if (message) {
+                    errors.push({
+                        field: prop,
+                        message,
+                        value
+                    });
+                    continue;
+                }
             }
         }
         return errors;

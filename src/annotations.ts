@@ -3,14 +3,19 @@ import { ValidationOptions } from "./validation-options";
 export function Validate(options?: ValidationOptions) {
     const defaultValidationOptions: ValidationOptions = { required: false };
 
-    for (const key of Object.keys(defaultValidationOptions)) {
-        if (options[key] === undefined) {
-            options[key] = defaultValidationOptions[key];
+    if (options) {
+        for (const key of Object.keys(defaultValidationOptions)) {
+            if (options[key] === undefined) {
+                options[key] = defaultValidationOptions[key];
+            }
         }
+    }
+    else {
+        options = defaultValidationOptions;
     }
 
     return (target: any, propertyKey: string) => {
-        let properties: string[] =  Reflect.getMetadata('best-validator-ever:properties', target);
+        let properties: string[] = Reflect.getMetadata('rufus-validation:properties', target);
 
         if (properties) {
             properties.push(propertyKey);
@@ -19,8 +24,8 @@ export function Validate(options?: ValidationOptions) {
             properties = [propertyKey];
         }
 
-        Reflect.defineMetadata('best-validator-ever:properties', propertyKey, target);
-        Reflect.defineMetadata('best-validator-ever:options', options, target, propertyKey);
+        Reflect.defineMetadata('rufus-validation:properties', properties, target);
+        Reflect.defineMetadata('rufus-validation:options', options, target, propertyKey);
     };
 }
 

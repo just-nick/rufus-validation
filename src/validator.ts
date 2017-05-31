@@ -1,17 +1,22 @@
 import 'reflect-metadata';
 import { ValidationError } from "./validation-error";
 import { ValidatableType } from "./validatable-type";
+import { CustomValidation } from "./custom-validation";
 
 export class Validator {
     public static validate<Type>(object: Type, AsType?: ValidatableType<Type>) {
+        let typeInstance: Type;
+        if (AsType) {
+            typeInstance = new AsType();
+        }
         const errors: ValidationError[] = [];
-        const typeToValidate = AsType || object;
-        const properties: string[] =  Reflect.getMetadata('best-validator-ever:properties', typeToValidate);
+        const typeToValidate = typeInstance || object;
+        const properties: string[] = Reflect.getMetadata('rufus-validation:properties', typeToValidate);
 
         for (const prop of properties) {
             const value: any = (object as any)[prop];
-            const type = Reflect.getMetadata('design:type', object, prop);
-            const options = Reflect.getMetadata('best-validator-ever:options', object, prop);
+            const type = Reflect.getMetadata('design:type', typeToValidate, prop);
+            const options = Reflect.getMetadata('rufus-validation:options', typeToValidate, prop);
 
             if (options.required) {
                 const error = this.validateRequired(value, prop);
@@ -24,6 +29,18 @@ export class Validator {
             const error = this.validateType(value, prop, type.name);
             if (error) {
                 errors.push(error);
+            }
+
+            if (options.custom) {
+                const message = options.custom(value);
+                if (message) {
+                    errors.push({
+                        field: prop,
+                        message,
+                        value
+                    });
+                    continue;
+                }
             }
         }
 
