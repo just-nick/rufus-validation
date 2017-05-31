@@ -10,6 +10,16 @@ export function Validate(options?: ValidationOptions) {
     }
 
     return (target: any, propertyKey: string) => {
+        let properties: string[] =  Reflect.getMetadata('best-validator-ever:properties', target);
+
+        if (properties) {
+            properties.push(propertyKey);
+        }
+        else {
+            properties = [propertyKey];
+        }
+
+        Reflect.defineMetadata('best-validator-ever:properties', propertyKey, target);
         Reflect.defineMetadata('best-validator-ever:options', options, target, propertyKey);
     };
 }
