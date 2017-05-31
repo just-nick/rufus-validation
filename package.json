@@ -1,0 +1,28 @@
+{
+    "name": "rufus-validation",
+    "version": "0.0.1",
+    "description": "Woof Woof Woof. (Translation: Decorator based validation)",
+    "main": "dist/index.js",
+    "scripts": {
+        "start": "tsc",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/just-nick/rufus-validation.git"
+    },
+    "keywords": [
+        "TypeScript",
+        "validation"
+    ],
+    "author": "just-nick",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/just-nick/rufus-validation/issues"
+    },
+    "homepage": "https://github.com/just-nick/rufus-validation#readme",
+    "dependencies": {
+        "reflect-metadata": "^0.1.10",
+        "typescript": "^2.3.4"
+    }
+}
