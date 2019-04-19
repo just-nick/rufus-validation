@@ -1,6 +1,6 @@
 {
     "name": "rufus-validation",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Woof Woof Woof. (Translation: Decorator based validation)",
     "main": "dist/index.js",
     "scripts": {
